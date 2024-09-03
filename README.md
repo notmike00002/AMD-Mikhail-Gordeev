@@ -6,7 +6,14 @@ This is the backend for the Waste Management app, designed to teach young people
 
 1. Install Docker and Docker Compose on your system.
 2. Clone this repository.
-3. Navigate to the project directory.
+3. Navigate to the project directory and, for testing, add .env file with
+
+MONGODB_URI=mongodb://mongo:27017/waste_management
+JWT_SECRET=my_secret
+PORT=3000
+REDIS_URL=redis://redis:6379
+SESSION_SECRET=my_secret.
+
 4. Run `docker-compose build` and then `docker-compose up` to start the application. populate.py can be used to populate MongoDB with mock data.
 
 The API will be available at `http://localhost:80`.
