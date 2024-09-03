@@ -1,0 +1,456 @@
+openapi: 3.0.0
+info:
+  title: Waste Management API
+  description: API for a waste management application
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api
+paths:
+  /users/register:
+    post:
+      summary: Register a new user
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - password
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+      responses:
+        "201":
+          description: User registered successfully
+        "400":
+          description: Bad request
+
+  /users/login:
+    post:
+      summary: Login user
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        "401":
+          description: Invalid credentials
+
+  /users/profile:
+    get:
+      summary: Get user profile
+      tags:
+        - Users
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: User profile retrieved successfully
+        "401":
+          description: Unauthorized
+
+  /users/update-score:
+    post:
+      summary: Update user score
+      tags:
+        - Users
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - challengeId
+                - itemsSorted
+              properties:
+                challengeId:
+                  type: string
+                itemsSorted:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      itemId:
+                        type: string
+                      categoryId:
+                        type: string
+      responses:
+        "200":
+          description: Score updated successfully
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+
+  /waste-categories:
+    get:
+      summary: Get all waste categories
+      tags:
+        - Waste Categories
+      responses:
+        "200":
+          description: List of waste categories
+    post:
+      summary: Create a new waste category
+      tags:
+        - Waste Categories
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - description
+                - disposalGuidelines
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                disposalGuidelines:
+                  type: string
+      responses:
+        "201":
+          description: Waste category created successfully
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+
+  /waste-categories/{id}:
+    get:
+      summary: Get a waste category by ID
+      tags:
+        - Waste Categories
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Waste category retrieved successfully
+        "404":
+          description: Waste category not found
+    put:
+      summary: Update a waste category
+      tags:
+        - Waste Categories
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                disposalGuidelines:
+                  type: string
+      responses:
+        "200":
+          description: Waste category updated successfully
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Waste category not found
+    delete:
+      summary: Delete a waste category
+      tags:
+        - Waste Categories
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Waste category deleted successfully
+        "401":
+          description: Unauthorized
+        "404":
+          description: Waste category not found
+
+  /waste-items:
+    get:
+      summary: Get all waste items
+      tags:
+        - Waste Items
+      responses:
+        "200":
+          description: List of waste items
+    post:
+      summary: Create a new waste item
+      tags:
+        - Waste Items
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - category
+                - sortingInstructions
+              properties:
+                name:
+                  type: string
+                category:
+                  type: string
+                sortingInstructions:
+                  type: string
+      responses:
+        "201":
+          description: Waste item created successfully
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+
+  /waste-items/{id}:
+    get:
+      summary: Get a waste item by ID
+      tags:
+        - Waste Items
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Waste item retrieved successfully
+        "404":
+          description: Waste item not found
+    put:
+      summary: Update a waste item
+      tags:
+        - Waste Items
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                category:
+                  type: string
+                sortingInstructions:
+                  type: string
+      responses:
+        "200":
+          description: Waste item updated successfully
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Waste item not found
+    delete:
+      summary: Delete a waste item
+      tags:
+        - Waste Items
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Waste item deleted successfully
+        "401":
+          description: Unauthorized
+        "404":
+          description: Waste item not found
+
+  /challenges:
+    get:
+      summary: Get all challenges
+      tags:
+        - Challenges
+      responses:
+        "200":
+          description: List of challenges
+    post:
+      summary: Create a new challenge
+      tags:
+        - Challenges
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - description
+                - difficultyLevel
+                - scoringCriteria
+              properties:
+                description:
+                  type: string
+                difficultyLevel:
+                  type: string
+                  enum: [easy, medium, hard]
+                scoringCriteria:
+                  type: string
+      responses:
+        "201":
+          description: Challenge created successfully
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+
+  /challenges/{id}:
+    get:
+      summary: Get a challenge by ID
+      tags:
+        - Challenges
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Challenge retrieved successfully
+        "404":
+          description: Challenge not found
+    put:
+      summary: Update a challenge
+      tags:
+        - Challenges
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+                difficultyLevel:
+                  type: string
+                  enum: [easy, medium, hard]
+                scoringCriteria:
+                  type: string
+      responses:
+        "200":
+          description: Challenge updated successfully
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Challenge not found
+    delete:
+      summary: Delete a challenge
+      tags:
+        - Challenges
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Challenge deleted successfully
+        "401":
+          description: Unauthorized
+        "404":
+          description: Challenge not found
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
